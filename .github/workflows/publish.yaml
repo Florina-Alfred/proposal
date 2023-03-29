@@ -20,17 +20,6 @@ jobs:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 #name: Package to ghcr.io
 #on: [push]
 #jobs:
