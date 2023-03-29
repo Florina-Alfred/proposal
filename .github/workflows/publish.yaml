@@ -1,41 +1,44 @@
+name: Docker Image CI
 
-#name: Docker Image CI
-#
-#on:
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
-#
-#jobs:
-#
-#  build:
-#
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - uses: actions/checkout@v3
-#    - name: Build the Docker image
-#      run: docker build . --file Dockerfile --tag proposal:$(date +%s)
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-
-
-name: Package to ghcr.io
-on: [push]
 jobs:
-    python-docker-image:
-       runs-on: ubuntu-latest
-       steps:
-       - uses: actions/checkout@v3
-       #- name: Login to GitHub Container Registry
-       #  uses: docker/login-action@v1
-       #  with:
-       #      registry: ghcr.io
-       #      username: ${{ github.actor }}
-       #      password: ${{ secrets.GITHUB_TOKEN }}
-       - name: Build the hello-docker Docker image
-         run: |
-                docker build . --tag ghcr.io/florina-alfred/proposal:latest
-                docker run ghcr.io/florina-alfred/proposal:latest
-                docker push ghcr.io/florina-alfred/proposal:latest
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+#      run: docker build . --file Dockerfile --tag proposal:$(date +%s)
+      run: |
+             docker build . --tag ghcr.io/florina-alfred/proposal:latest
+             docker run ghcr.io/florina-alfred/proposal:latest
+             docker push ghcr.io/florina-alfred/proposal:latest
+
+
+
+#name: Package to ghcr.io
+#on: [push]
+#jobs:
+#    python-docker-image:
+#       runs-on: ubuntu-latest
+#       steps:
+#       - uses: actions/checkout@v3
+#       #- name: Login to GitHub Container Registry
+#       #  uses: docker/login-action@v1
+#       #  with:
+#       #      registry: ghcr.io
+#       #      username: ${{ github.actor }}
+#       #      password: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Build the Flask python Docker image
+#         run: |
+#                docker build . --tag ghcr.io/florina-alfred/proposal:latest
+#                docker run ghcr.io/florina-alfred/proposal:latest
+#                docker push ghcr.io/florina-alfred/proposal:latest
 
