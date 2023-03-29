@@ -16,8 +16,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-              docker build . --file Dockerfile --tag ghcr.io/florina-alfred/proposal:$(date +%s)
-              docker push ghcr.io/florina-alfred/proposal:$(date +%s)
+              docker build . --file Dockerfile --tag ghcr.io/florina-alfred/proposal:latest
+              docker push ghcr.io/florina-alfred/proposal:latest
       #run: |
       #       docker build . --file Dockerfile --tag ghcr.io/florina-alfred/proposal:latest
       #       docker run ghcr.io/florina-alfred/proposal:latest
