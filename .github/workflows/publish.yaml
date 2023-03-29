@@ -36,7 +36,7 @@ jobs:
 #       #      password: ${{ secrets.GITHUB_TOKEN }}
 #       - name: Build the hello-docker Docker image
 #         run: |
-#                docker build . --tag ghcr.io/Florina-Alfred/proposal:latest
-#                docker run ghcr.io/Florina-Alfred/proposal:latest
-#                docker push ghcr.io/Florina-Alfred/proposal:latest
+#                docker build . --tag ghcr.io/florina-alfred/proposal:latest
+#                docker run ghcr.io/florina-alfred/proposal:latest
+#                docker push ghcr.io/florina-alfred/proposal:latest
 
