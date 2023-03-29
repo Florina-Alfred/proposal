@@ -17,7 +17,7 @@ jobs:
     - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag proposal:$(date +%s)
       run: |
-             docker build . --tag ghcr.io/florina-alfred/proposal:latest
+             docker build . --file Dockerfile --tag ghcr.io/florina-alfred/proposal:latest
              docker run ghcr.io/florina-alfred/proposal:latest
              docker push ghcr.io/florina-alfred/proposal:latest
 
