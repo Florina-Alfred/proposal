@@ -18,8 +18,8 @@ jobs:
           run: |
                  docker build . --tag ghcr.io/florina-alfred/proposal:latest
                  docker push ghcr.io/florina-alfred/proposal:latest
-                 docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:${{ github.sha }}
-                 docker push ghcr.io/florina-alfred/proposal:${{ github.sha }}
+                 docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:${{ steps.vars.outputs.sha_short }}
+                 docker push ghcr.io/florina-alfred/proposal:${{ steps.vars.outputs.sha_short }}
         #- name: Build and push
         #  id: docker_build
         #  uses: docker/build-push-action@v2
