@@ -2,27 +2,27 @@ name: Package to ghcr.io
 on: [push]
 jobs:
     python-docker-image:
-       runs-on: ubuntu-latest
-       permissions:
-         contents: read
-         packages: write  
-       steps:
-       - uses: actions/checkout@v3
-       - name: Login to GitHub Container Registry
-         uses: docker/login-action@v2
-         with:
-             registry: ghcr.io
-             username: ${{ github.actor }}
-             password: ${{ secrets.TOKEN }}
-       - name: Build the Flask python Docker image
-         run: |
-                docker build . --tag ghcr.io/florina-alfred/proposal:${{ steps.tag.outputs.tag }}
-                docker push ghcr.io/florina-alfred/proposal:${{ steps.tag.outputs.tag }}
-       #- name: Build and push
-       #  id: docker_build
-       #  uses: docker/build-push-action@v2
-       #  with:
-       #    context: .
-       #    push: true
-       #    tags: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ steps.vars.outputs.tag }} ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write  
+        steps:
+        - uses: actions/checkout@v3
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v2
+          with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ secrets.TOKEN }}
+        - name: Build the Flask python Docker image
+          run: |
+                 docker build . --tag ghcr.io/florina-alfred/proposal:latest
+                 docker push ghcr.io/florina-alfred/proposal:latest
+        #- name: Build and push
+        #  id: docker_build
+        #  uses: docker/build-push-action@v2
+        #  with:
+        #    context: .
+        #    push: true
+        #    tags: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ steps.vars.outputs.tag }} ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
 
