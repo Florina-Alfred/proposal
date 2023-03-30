@@ -16,6 +16,13 @@ jobs:
              password: ${{ secrets.TOKEN }}
        - name: Build the Flask python Docker image
          run: |
-                docker build . --tag ghcr.io/florina-alfred/proposal:18
-                docker push ghcr.io/florina-alfred/proposal:18
+                docker build . --tag ghcr.io/florina-alfred/proposal:${{ steps.tag.outputs.tag }}
+                docker push ghcr.io/florina-alfred/proposal:${{ steps.tag.outputs.tag }}
+       #- name: Build and push
+       #  id: docker_build
+       #  uses: docker/build-push-action@v2
+       #  with:
+       #    context: .
+       #    push: true
+       #    tags: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ steps.vars.outputs.tag }} ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
 
