@@ -4,6 +4,7 @@ import io
 from fastapi import FastAPI
 import cv2
 import uvicorn
+import nicegui as ui
 
 app = FastAPI()
 TEXT = "Alfred proposes to Florina 3 times"
