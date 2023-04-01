@@ -7,10 +7,11 @@ TEXT_2 = "Alfred proposes to Florina for an infinite number of times"
 
 @app.route('/')
 def home():
-    return TEXT_1
+   return render_template('index.html', bride="Florina", groom="Alfred")
 
-@app.route('/real')
-def outside():
-    return TEXT_2
+@app.route('/<name>')
+def outside(name):
+    return name
 
-app.run(host='0.0.0.0',port=3000)
+if __name__ == '__main__':
+   app.run(host='0.0.0.0',port=3000)
