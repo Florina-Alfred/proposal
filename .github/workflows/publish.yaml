@@ -20,7 +20,7 @@ jobs:
         - name: Set outputs
           id: vars
           run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-        - name: Build the Flask python Docker image
+        - name: Build the FastAPI, uvicorn and CV2 python Docker image
           run: |
                  docker build . --tag ghcr.io/florina-alfred/proposal:latest
                  docker push ghcr.io/florina-alfred/proposal:latest

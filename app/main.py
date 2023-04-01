@@ -6,7 +6,7 @@ import cv2
 import uvicorn
 
 app = FastAPI()
-TEXT = "Alfred prposes to Florina 3 times"
+TEXT = "Alfred proposes to Florina 3 times"
 
 
 @app.get("/")
