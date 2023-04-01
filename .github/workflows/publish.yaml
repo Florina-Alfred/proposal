@@ -1,5 +1,11 @@
 name: Package to ghcr.io
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
     python-docker-image:
         runs-on: ubuntu-latest
