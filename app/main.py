@@ -10,6 +10,7 @@ app = FastAPI()
 TEXT = "Alfred proposes to Florina 3 times"
 
 
+
 @app.get("/")
 def root():
     img = cv2.imread("./app/static/images.jpeg")
