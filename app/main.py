@@ -27,6 +27,11 @@ def root():
                              media_type="image/jpeg")
 
 
+@app.get("/working")
+def health():
+    return {"health": True}
+
+
 if __name__ == "__main__":
     uvicorn.run("__main__:app", host="0.0.0.0",
                 port=3000, reload=True, workers=2)
