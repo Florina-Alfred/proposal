@@ -7,7 +7,7 @@ import uvicorn
 import nicegui as ui
 
 app = FastAPI()
-TEXT = "Alfred proposes to Florina infinite times"
+TEXT = "Alfred proposes to Florina 5 times"
 
 
 @app.get("/")
