@@ -1,13 +1,14 @@
 import base64
-from fastapi.responses import FileResponse, Response, StreamingResponse
-import io
 from fastapi import FastAPI
-import cv2
-import uvicorn
+from fastapi.responses import FileResponse, Response, StreamingResponse
 import nicegui as ui
+import uvicorn
+import io
+import cv2
 
-app = FastAPI()
+app = FastAPI(title='Proposal', version="0.3.0")
 TEXT = "Alfred proposes to Florina 5 times"
+favicon_path = './app/static/icon.png'
 
 
 @app.get("/")
@@ -30,6 +31,11 @@ def root():
 @app.get("/working")
 def health():
     return {"health": True}
+
+
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
 
 
 if __name__ == "__main__":
