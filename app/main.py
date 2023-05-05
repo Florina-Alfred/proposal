@@ -7,7 +7,7 @@ import io
 import cv2
 
 app = FastAPI(title='Proposal', version="0.3.0")
-TEXT = "Alfred proposes to Florina 5 times"
+TEXT = "Alfred proposes to Florina few times"
 favicon_path = './app/static/icon.png'
 
 
