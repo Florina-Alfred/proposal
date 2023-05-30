@@ -5,6 +5,8 @@ import nicegui as ui
 import uvicorn
 import io
 import cv2
+import glob
+import random
 
 app = FastAPI(title="Proposal", version="0.3.0")
 TEXT = "Alfred proposes to Florina 3+ times"
@@ -13,7 +15,8 @@ favicon_path = "./app/static/icon.png"
 
 @app.get("/")
 def root():
-    img = cv2.imread("./app/static/images.jpeg")
+    img_name = random.choice(glob.glob("./app/static/image_*"))
+    img = cv2.imread(img_name)
     img_y, img_x, _ = img.shape
 
     cv2.putText(
