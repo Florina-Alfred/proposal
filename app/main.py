@@ -37,6 +37,11 @@ def health():
     return {"health": True}
 
 
+@app.get("/metric")
+def health():
+    return {"health": True}
+
+
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     return FileResponse(favicon_path)
