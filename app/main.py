@@ -5,6 +5,7 @@ import nicegui as ui
 import uvicorn
 import io
 import cv2
+import numpy as np
 import glob
 import random
 
@@ -31,10 +32,25 @@ def root():
     _, img_jpeg = cv2.imencode(".jpeg", img)
     return StreamingResponse(io.BytesIO(img_jpeg.tobytes()), media_type="image/jpeg")
 
-@app.get(
-    "/image",
-    responses = {200: {"content": {"image/jpeg": {}}}},
-    response_class=Response
+
+def gen_frames():
+    vid = cv2.VideoCapture(0)
+    while True:
+        _, frame = vid.read()
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+@app.get("/video")
+async def frame_fn():
+    return StreamingResponse(gen_frames(), media_type='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.get("/image",
+         responses = {200: {"content": {"image/jpeg": {}}}},
+         response_class=Response
 )
 def get_image():
     img_name = random.choice(glob.glob("./app/static/image_*"))
@@ -53,6 +69,7 @@ def get_image():
     _, img_jpeg = cv2.imencode(".jpeg", img)
     image_bytes: bytes = img_jpeg.tobytes()
     return Response(content=image_bytes, media_type="image/jpeg")
+
 
 @app.get("/working")
 def health():
