@@ -77,6 +77,7 @@ def health():
     return {"health": True}
 
 
+
 metrics_app = make_asgi_app()
 app.mount("/metrics", metrics_app)
 
