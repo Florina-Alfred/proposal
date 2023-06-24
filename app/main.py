@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 import glob
 import random
+from prometheus_client import make_asgi_app
 
 app = FastAPI(title="Proposal", version="0.3.0")
 TEXT = "Alfred proposes to Florina 3+ times"
@@ -76,9 +77,8 @@ def health():
     return {"health": True}
 
 
-@app.get("/metric")
-def health():
-    return {"health": True}
+metrics_app = make_asgi_app()
+app.mount("/metrics", metrics_app)
 
 
 @app.get("/favicon.ico", include_in_schema=False)
