@@ -11,7 +11,7 @@ import random
 from prometheus_client import make_asgi_app
 
 app = FastAPI(title="Proposal", version="0.3.0")
-TEXT = "Alfred proposes to Florina 3+ times"
+TEXT = "Alfred proposes to Florina 3+ times and will do it more often"
 favicon_path = "./app/static/icon.png"
 
 
