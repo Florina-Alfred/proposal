@@ -1,6 +1,7 @@
 import base64
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, Response, StreamingResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse, Response, StreamingResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 import nicegui as ui
 import uvicorn
 import io
@@ -14,24 +15,10 @@ app = FastAPI(title="Proposal", version="0.3.0")
 TEXT = "Alfred proposes to Florina 3+ times and will do it more often"
 favicon_path = "./app/static/icon.png"
 
-
-@app.get("/")
-def root():
-    img_name = random.choice(glob.glob("./app/static/image_*"))
-    img = cv2.imread(img_name)
-    img_y, img_x, _ = img.shape
-
-    cv2.putText(
-        img=img,
-        text=TEXT,
-        org=(img_x // 2 - (len(TEXT) // 2) * 18, img_y // 5),
-        fontFace=cv2.FONT_HERSHEY_TRIPLEX,
-        fontScale=1,
-        color=(0, 0, 255),
-        thickness=1,
-    )
-    _, img_jpeg = cv2.imencode(".jpeg", img)
-    return StreamingResponse(io.BytesIO(img_jpeg.tobytes()), media_type="image/jpeg")
+templates = Jinja2Templates(directory="./app/static")
+@app.get('/',response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 def gen_frames():
@@ -73,9 +60,8 @@ def get_image():
 
 
 @app.get("/working")
-def health():
+async def health():
     return {"health": True}
-
 
 
 metrics_app = make_asgi_app()
