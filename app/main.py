@@ -11,8 +11,8 @@ import glob
 import random
 from prometheus_client import make_asgi_app
 
-app = FastAPI(title="Proposal", version="0.3.0")
-TEXT = "Alfred proposes to Florina 3+ times and will do it more often"
+app = FastAPI(title="Proposal", version="0.5.0")
+TEXT = "Alfred proposes to Florina 3+ times"
 favicon_path = "./app/static/icon.png"
 
 templates = Jinja2Templates(directory="./app/static")
@@ -20,7 +20,7 @@ templates = Jinja2Templates(directory="./app/static")
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
+""" 
 def gen_frames():
     vid = cv2.VideoCapture(0)
     while True:
@@ -65,7 +65,7 @@ async def health():
 
 
 metrics_app = make_asgi_app()
-app.mount("/metrics", metrics_app)
+app.mount("/metrics", metrics_app) """
 
 
 @app.get("/favicon.ico", include_in_schema=False)
