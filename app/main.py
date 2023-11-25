@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 import glob
 import random
-from prometheus_client import make_asgi_app
+from prometheus_client import Gauge, make_asgi_app
 
 app = FastAPI(title="Proposal", version="0.5.0")
 TEXT = "Alfred proposes to Florina 3+ times"
@@ -61,6 +61,7 @@ def get_image():
 
 @app.get("/working")
 async def health():
+    g.set(random.random())
     return {"health": True}
 
 
@@ -74,4 +75,5 @@ async def favicon():
 
 
 if __name__ == "__main__":
+    g = Gauge("test_guage", "description for the test_guage")
     uvicorn.run("__main__:app", host="0.0.0.0", port=3000)
