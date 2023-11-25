@@ -56,7 +56,7 @@ def get_image():
     )
     _, img_jpeg = cv2.imencode(".jpeg", img)
     image_bytes: bytes = img_jpeg.tobytes()
-    return Response(content=image_bytes, media_type="image/jpeg")
+    return Response(content=image_bytes, media_type="image/jpeg") """
 
 
 @app.get("/working")
@@ -65,7 +65,7 @@ async def health():
 
 
 metrics_app = make_asgi_app()
-app.mount("/metrics", metrics_app) """
+app.mount("/metrics", metrics_app)
 
 
 @app.get("/favicon.ico", include_in_schema=False)
