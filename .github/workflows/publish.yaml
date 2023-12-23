@@ -22,15 +22,15 @@ jobs:
           run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
         - name: Build the FastAPI, uvicorn and CV2 python Docker image
           run: |
-                 docker build ./py_site ghcr.io/florina-alfred/proposal:py_${{ steps.vars.outputs.sha_short }}
+                 docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py_${{ steps.vars.outputs.sha_short }}
                  docker push ghcr.io/florina-alfred/proposal:py_${{ steps.vars.outputs.sha_short }}
         - name: Build actix_web, actix_web_prom and serde
           run: |
-                 docker build ./rust_site  ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
+                 docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
                  docker push ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
         - name: Build the FastAPI, uvicorn and CV2 python Docker image
           run: |
-                 docker build ./py_site --tag ghcr.io/florina-alfred/proposal:latest
+                 docker build ./go_site --tag ghcr.io/florina-alfred/proposal:latest
                  docker push ghcr.io/florina-alfred/proposal:latest
                  docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:${{ steps.vars.outputs.sha_short }}
                  docker push ghcr.io/florina-alfred/proposal:${{ steps.vars.outputs.sha_short }}
