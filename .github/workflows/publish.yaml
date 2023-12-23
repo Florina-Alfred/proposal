@@ -37,7 +37,7 @@ jobs:
             pip install -r py_site/requirements.txt
         - name: Test py_site with pytest
           run: |
-            pip install pytest pytest-cov httpx
+            pip install pytest pytest-cov httpx Jinja2Templates
             pytest py_site/app/test_main.py
         - name: Lint Python code with Ruff
           run: |
