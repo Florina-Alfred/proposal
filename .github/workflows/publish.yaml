@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-    python-docker-image:
+    package-docker-image:
         runs-on: ubuntu-latest
         permissions:
           contents: read
@@ -22,15 +22,15 @@ jobs:
           run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
         - name: Build the FastAPI, uvicorn and CV2 python Docker image
           run: |
-                 docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py_${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:py_${{ steps.vars.outputs.sha_short }}
+                 docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
+                 docker push ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
         - name: Build actix_web, actix_web_prom and serde
           run: |
-                 docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
+                 docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
+                 docker push ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
         - name: Build the Gin and ginmetrics
           run: |
                  docker build ./go_site --tag ghcr.io/florina-alfred/proposal:latest
                  docker push ghcr.io/florina-alfred/proposal:latest
-                 docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:${{ steps.vars.outputs.sha_short }}
+                 docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}
+                 docker push ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}

@@ -60,6 +60,8 @@ def get_image():
     return Response(content=image_bytes, media_type="image/jpeg") """
 
 
+g = Gauge("test_guage", "description for the test_guage")
+
 @app.get("/working")
 async def working():
     g.set(random.random())
@@ -78,5 +80,4 @@ async def favicon():
 
 
 if __name__ == "__main__":
-    g = Gauge("test_guage", "description for the test_guage")
     uvicorn.run("__main__:app", host="0.0.0.0", port=3000)
