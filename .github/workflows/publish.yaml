@@ -8,7 +8,10 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
           contents: read
-          packages: write  
+          packages: write
+        strategy:
+          matrix:
+            python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         steps:
         - uses: actions/checkout@v3
         - name: Login to GitHub Container Registry
@@ -20,6 +23,24 @@ jobs:
         - name: Set outputs
           id: vars
           run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        # Python
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: ${{ matrix.python-version }}
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r py_site/requirements.txt
+        - name: Test with pytest
+          run: |
+            pip install pytest pytest-cov
+            pytest py_site/app/tests_main.py
+        - name: Lint with Ruff
+          run: |
+            pip install ruff
+            ruff --output-format=github .
+          continue-on-error: true
         - name: Build the FastAPI, uvicorn and CV2 python Docker image
           run: |
                  docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}

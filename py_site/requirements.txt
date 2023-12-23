@@ -4,4 +4,4 @@ opencv-python
 numpy
 nicegui
 prometheus_client
-pytest
+# pytest
