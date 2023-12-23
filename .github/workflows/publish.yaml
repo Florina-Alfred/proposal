@@ -28,7 +28,7 @@ jobs:
           run: |
                  docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
                  docker push ghcr.io/florina-alfred/proposal:rust_${{ steps.vars.outputs.sha_short }}
-        - name: Build the FastAPI, uvicorn and CV2 python Docker image
+        - name: Build the Gin and ginmetrics
           run: |
                  docker build ./go_site --tag ghcr.io/florina-alfred/proposal:latest
                  docker push ghcr.io/florina-alfred/proposal:latest
