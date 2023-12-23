@@ -1,2 +1,3 @@
 rust_site/target/*
 py_site/.pytest_cache/*
+py_site/__pycache__/*
