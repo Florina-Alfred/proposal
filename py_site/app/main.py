@@ -10,6 +10,7 @@ import numpy as np
 import glob
 import random
 from prometheus_client import Gauge, make_asgi_app
+import time
 
 app = FastAPI(title="Proposal", version="0.5.0")
 TEXT = "Alfred proposes to Florina 3+ times"
@@ -60,9 +61,11 @@ def get_image():
 
 
 @app.get("/working")
-async def health():
+async def working():
     g.set(random.random())
-    return {"health": True}
+    return {"working": "ok",
+            "language" : "python",
+            "time": time.strftime('%X %x %Z')}
 
 
 metrics_app = make_asgi_app()

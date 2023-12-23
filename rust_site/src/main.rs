@@ -1,19 +1,23 @@
 use actix_files::NamedFile;
 use actix_web::{get, web, App, HttpServer, Responder, Result};
 use actix_web_prom::PrometheusMetricsBuilder;
+use chrono::Utc;
 use prometheus::Gauge;
 use rand::Rng;
 use serde::Serialize;
-
 #[derive(Serialize)]
 struct Status {
     working: String,
+    langage: String,
+    time: String,
 }
 
 #[get("/working")]
 async fn working(test_gauge: web::Data<Gauge>) -> Result<impl Responder> {
     let obj = Status {
         working: "ok".to_string(),
+        langage: "rust".to_string(),
+        time: Utc::now().to_string(),
     };
     test_gauge.set(rand::thread_rng().gen::<f64>());
     Ok(web::Json(obj))
@@ -44,7 +48,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(test_guage.clone()))
             .wrap(prometheus.clone())
     })
-    .bind(("0.0.0.0", 9090))?
+    .bind(("0.0.0.0", 3000))?
     .run()
     .await
 }

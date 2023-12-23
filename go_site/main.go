@@ -3,13 +3,16 @@ package main
 import (
 	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/penglongli/gin-metrics/ginmetrics"
 )
 
 type status struct {
-	Working string `json:"working"`
+	Working  string    `json:"working"`
+	Language string    `json:"language"`
+	Time     time.Time `json:"time"`
 }
 
 func working(c *gin.Context) {
@@ -18,7 +21,7 @@ func working(c *gin.Context) {
 	/* c.JSON(http.StatusOK, gin.H{
 		"working": "ok",
 	}) */
-	var currentStatus = status{Working: "ok"}
+	var currentStatus = status{Working: "ok", Language: "golang", Time: time.Now()}
 	c.IndentedJSON(http.StatusOK, currentStatus)
 }
 
@@ -49,6 +52,6 @@ func main() {
 
 	router.GET("/working", working)
 
-	router.Run(":8080")
+	router.Run(":3000")
 
 }
