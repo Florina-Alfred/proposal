@@ -2,12 +2,12 @@ import base64
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, Response, StreamingResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-import nicegui as ui
+# import nicegui as ui
 import uvicorn
-import io
-import cv2
-import numpy as np
-import glob
+# import io
+# import cv2
+# import numpy as np
+# import glob
 import random
 from prometheus_client import Gauge, make_asgi_app
 import time

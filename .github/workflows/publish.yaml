@@ -13,8 +13,8 @@ jobs:
           matrix:
             python-version: ["3.12"]
             # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-            go-version: [ "1.21"]
-            # go-version: [ "1.19", "1.20", "1.21.x"]
+            go-version: ["1.21"]
+            # go-version: ["1.19", "1.20", "1.21.x"]
         steps:
         - uses: actions/checkout@v3
         - name: Login to GitHub Container Registry
@@ -27,19 +27,19 @@ jobs:
           id: vars
           run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
         # Python
-        - name: Set multiple (matrix) versions of Python
+        - name: Setup Python ${{ matrix.python-version }}
           uses: actions/setup-python@v4
           with:
             python-version: ${{ matrix.python-version }}
-        - name: Install dependencies
+        - name: Install Python dependencies
           run: |
             python -m pip install --upgrade pip
             pip install -r py_site/requirements.txt
-        - name: Test with pytest
+        - name: Test py_site with pytest
           run: |
             pip install pytest pytest-cov
             pytest py_site/app/test_main.py
-        - name: Lint code with Ruff
+        - name: Lint Python code with Ruff
           run: |
             pip install ruff
             ruff --output-format=github .
@@ -48,17 +48,13 @@ jobs:
           run: |
                  docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
                  docker push ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
-        # Rust
-        - name: Build actix_web, actix_web_prom and serde
-          run: |
-                 docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
+
         # Go
         - name: Setup Go ${{ matrix.go-version }}
           uses: actions/setup-go@v4
           with:
             go-version: ${{ matrix.go-version }}
-        - name: Install dependencies
+        - name: Install Go dependencies
           working-directory: ./go_site
           run: go get .
         - name: Build
@@ -72,4 +68,10 @@ jobs:
                  docker build ./go_site --tag ghcr.io/florina-alfred/proposal:latest
                  docker push ghcr.io/florina-alfred/proposal:latest
                  docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}
+                 docker push ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}        
+        
+        # Rust
+        - name: Build actix_web, actix_web_prom and serde
+          run: |
+                 docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
+                 docker push ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
