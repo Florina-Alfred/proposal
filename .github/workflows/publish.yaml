@@ -4,74 +4,88 @@ on:
     branches:
       - main
 jobs:
-    package-docker-image:
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read
-          packages: write
-        strategy:
-          matrix:
-            python-version: ["3.12"]
-            # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-            go-version: ["1.21"]
-            # go-version: ["1.19", "1.20", "1.21.x"]
-        steps:
-        - uses: actions/checkout@v3
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v2
-          with:
-              registry: ghcr.io
-              username: ${{ github.actor }}
-              password: ${{ secrets.TOKEN }}
-        - name: Set outputs
-          id: vars
-          run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-        # Python
-        - name: Setup Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v4
-          with:
-            python-version: ${{ matrix.python-version }}
-        - name: Install Python dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r py_site/requirements.txt
-        - name: Test py_site with pytest
-          run: |
-            pip install pytest pytest-cov httpx Jinja2
-            pytest py_site/app/test_main.py
-        - name: Lint Python code with Ruff
-          run: |
-            pip install ruff
-            ruff --output-format=github .
-          continue-on-error: true
-        - name: Build the FastAPI, uvicorn and CV2 python Docker image
-          run: |
-                 docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
+  package-docker-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
+        python-version: ["3.12"]
+        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        go-version: ["1.21"]
+        # go-version: ["1.19", "1.20", "1.21.x"]
+        rust-version: ["stable"]
+        # rust-version: ["stable", "beta", "nightly"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    # Python
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r py_site/requirements.txt
+    - name: Test py_site with pytest
+      run: |
+        pip install pytest pytest-cov httpx Jinja2
+        pytest py_site/app/test_main.py
+    - name: Lint Python code with Ruff
+      run: |
+        pip install ruff
+        ruff --output-format=github .
+      continue-on-error: true
+    - name: Build the FastAPI, uvicorn and CV2 -> Python Docker image
+      run: |
+              docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
+              docker push ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
 
-        # Go
-        - name: Setup Go ${{ matrix.go-version }}
-          uses: actions/setup-go@v4
-          with:
-            go-version: ${{ matrix.go-version }}
-        - name: Install Go dependencies
-          working-directory: ./go_site
-          run: go get .
-        - name: Build Go package to test buildability
-          working-directory: ./go_site
-          run: go build -v ./...
-        - name: Test with the Go CLI
-          working-directory: ./go_site
-          run: go test -v
-        - name: Build the Gin and ginmetrics
-          run: |
-                 docker build ./go_site --tag ghcr.io/florina-alfred/proposal:latest
-                 docker push ghcr.io/florina-alfred/proposal:latest
-                 docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}        
-        
-        # Rust
-        - name: Build actix_web, actix_web_prom and serde
-          run: |
-                 docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
-                 docker push ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
+    # Go
+    - name: Setup Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: Install Go dependencies
+      working-directory: ./go_site
+      run: go get .
+    - name: Build Go package to test buildability
+      working-directory: ./go_site
+      run: go build -v ./...
+    - name: Test with the Go CLI
+      working-directory: ./go_site
+      run: go test -v
+    - name: Build the Gin and ginmetrics -> Go Docker image
+      run: |
+              docker build ./go_site --tag ghcr.io/florina-alfred/proposal:latest
+              docker push ghcr.io/florina-alfred/proposal:latest
+              docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}
+              docker push ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}        
+    
+    # Rust
+    - name: Setup Rust (Unofficial)
+      uses: ATiltedTree/setup-rust@v1
+      with:
+        rust-version: ${{ matrix.rust }}
+    - name: Building Rust packages (and verify for buildability)
+      working-directory: ./rust_site
+      run: cargo check
+    - name: Testing with Rust CLI
+      working-directory: ./rust_site
+      run: cargo test
+    - name: Build actix_web, actix_web_prom and serde -> Rust Docker image
+      run: |
+              docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
+              docker push ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
