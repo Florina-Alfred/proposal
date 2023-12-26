@@ -57,7 +57,7 @@ jobs:
         - name: Install Go dependencies
           working-directory: ./go_site
           run: go get .
-        - name: Build
+        - name: Build Go package to test buildability
           working-directory: ./go_site
           run: go build -v ./...
         - name: Test with the Go CLI
