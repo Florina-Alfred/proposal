@@ -78,7 +78,7 @@ jobs:
     - name: Setup Rust (Unofficial)
       uses: ATiltedTree/setup-rust@v1
       with:
-        rust-version: ${{ matrix.rust }}
+        rust-version: ${{ matrix.rust-version }}
     - name: Building Rust packages (and verify for buildability)
       working-directory: ./rust_site
       run: cargo check
