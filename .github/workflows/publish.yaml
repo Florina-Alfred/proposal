@@ -4,21 +4,16 @@ on:
     branches:
       - main
 jobs:
-  package-docker-image:
+  # Python
+  python-package-docker-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
-        os: ["ubuntu-latest"]
-        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
         python-version: ["3.12"]
         # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        go-version: ["1.21"]
-        # go-version: ["1.19", "1.20", "1.21.x"]
-        rust-version: ["stable"]
-        # rust-version: ["stable", "beta", "nightly"]
     steps:
     - uses: actions/checkout@v3
     - name: Login to GitHub Container Registry
@@ -30,7 +25,6 @@ jobs:
     - name: Set outputs
       id: vars
       run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-    # Python
     - name: Setup Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -53,7 +47,27 @@ jobs:
               docker build ./py_site --tag ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
               docker push ghcr.io/florina-alfred/proposal:py-${{ steps.vars.outputs.sha_short }}
 
-    # Go
+  # Go
+  go-package-docker-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        go-version: ["1.21"]
+        # go-version: ["1.19", "1.20", "1.21.x"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v4
       with:
@@ -74,7 +88,29 @@ jobs:
               docker tag ghcr.io/florina-alfred/proposal:latest  ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}
               docker push ghcr.io/florina-alfred/proposal:go-${{ steps.vars.outputs.sha_short }}        
     
-    # Rust
+  # Rust
+  rust-package-docker-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
+        rust-version: ["stable"]
+        # rust-version: ["stable", "beta", "nightly"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Setup Rust (Unofficial)
       uses: ATiltedTree/setup-rust@v1
       with:
