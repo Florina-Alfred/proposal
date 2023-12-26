@@ -6,14 +6,16 @@ on:
 jobs:
   # Python
   python-package-docker-image:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
+        os: ["ubuntu-latest"]
+        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
         python-version: ["3.12"]
         # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    runs-on: {{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - name: Login to GitHub Container Registry
@@ -49,14 +51,16 @@ jobs:
 
   # Go
   go-package-docker-image:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
+        os: ["ubuntu-latest"]
+        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
         go-version: ["1.21"]
         # go-version: ["1.19", "1.20", "1.21.x"]
+    runs-on: {{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - name: Login to GitHub Container Registry
@@ -90,7 +94,6 @@ jobs:
     
   # Rust
   rust-package-docker-image:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -100,6 +103,7 @@ jobs:
         # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
         rust-version: ["stable"]
         # rust-version: ["stable", "beta", "nightly"]
+    runs-on: {{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - name: Login to GitHub Container Registry
