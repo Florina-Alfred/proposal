@@ -1,13 +1,7 @@
-import base64
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, Response, StreamingResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-# import nicegui as ui
 import uvicorn
-# import io
-# import cv2
-# import numpy as np
-# import glob
 import random
 from prometheus_client import Gauge, make_asgi_app
 import time
@@ -17,9 +11,12 @@ TEXT = "Alfred proposes to Florina 3+ times"
 favicon_path = "./app/static/icon.png"
 
 templates = Jinja2Templates(directory="./app/static")
-@app.get('/',response_class=HTMLResponse)
+
+
+@app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
 
 """ 
 def gen_frames():
@@ -62,12 +59,11 @@ def get_image():
 
 g = Gauge("test_guage", "description for the test_guage")
 
+
 @app.get("/working")
 async def working():
     g.set(random.random())
-    return {"working": "ok",
-            "language" : "python",
-            "time": time.strftime('%X %x %Z')}
+    return {"working": "ok", "language": "python", "time": time.strftime("%X %x %Z")}
 
 
 metrics_app = make_asgi_app()

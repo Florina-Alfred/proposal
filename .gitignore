@@ -2,3 +2,4 @@ rust_site/target/*
 py_site/.pytest_cache/*
 py_site/__pycache__/*
 go_site/go_site
+.vscode/*
