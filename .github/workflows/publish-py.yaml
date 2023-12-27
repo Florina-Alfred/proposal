@@ -25,7 +25,8 @@ jobs:
           password: ${{ secrets.TOKEN }}
     - name: Set outputs
       id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      # run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
     - name: Setup Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
