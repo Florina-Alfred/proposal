@@ -1,0 +1,42 @@
+name: Package to ghcr.io
+on:
+  push:
+    branches:
+      - main
+jobs:
+  rust-package-docker-image:
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
+        rust-version: ["stable"]
+        # rust-version: ["stable", "beta", "nightly"]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    - name: Setup Rust (Unofficial)
+      uses: ATiltedTree/setup-rust@v1
+      with:
+        rust-version: ${{ matrix.rust-version }}
+    - name: Building Rust packages (and verify for buildability)
+      working-directory: ./rust_site
+      run: cargo check
+    - name: Testing with Rust CLI
+      working-directory: ./rust_site
+      run: cargo test
+    - name: Build actix_web, actix_web_prom and serde -> Rust Docker image
+      run: |
+              docker build ./rust_site --tag ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
+              docker push ghcr.io/florina-alfred/proposal:rust-${{ steps.vars.outputs.sha_short }}
