@@ -2,9 +2,11 @@
 
 Site builder written in mutliple languages. This is coded to have the following features:
 
-[x] Python
-[x] Go
-[x] Rust
+### What is it?
+
+- [x] Python
+- [ ] Go
+- [ ] Rust
 
 | End-point | Descriptions                                             |
 | --------- | -------------------------------------------------------- |

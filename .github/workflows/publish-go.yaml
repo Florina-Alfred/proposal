@@ -1,8 +1,10 @@
 name: Package to ghcr.io
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+  pull_request:
+    types: ["review_requested"]
 jobs:
   go-package-docker-image:
     permissions:
