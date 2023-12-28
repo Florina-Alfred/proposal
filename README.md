@@ -1,12 +1,12 @@
 # proposal
 
-Site builder written in the following mutliple languages:
+## Site builder written in the following languages:
 
 - [x] Python
 - [x] Go
 - [x] Rust
 
-Site has the following end-points:
+## Site has the following end-points:
 
 | End-point  | Descriptions                                             |
 | ---------- | -------------------------------------------------------- |
@@ -15,7 +15,7 @@ Site has the following end-points:
 | `/working` | JSON with health, language and time                      |
 |            |                                                          |
 
-Example of JSON from `/working` end-point:
+## Example of JSON from `/working` end-point:
 
 ```json
 {
