@@ -5,6 +5,7 @@ import uvicorn
 import random
 from prometheus_client import Gauge, make_asgi_app
 import time
+import requests
 
 app = FastAPI(title="Proposal", version="0.5.0")
 TEXT = "Alfred proposes to Florina 3+ times"
@@ -58,6 +59,17 @@ def get_image():
 
 
 g = Gauge("test_guage", "description for the test_guage")
+
+
+@app.get("/api")
+async def api():
+    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
+    querystring = {"term": "set"}
+    headers = {
+        "X-RapidAPI-Key": "e15cce8cedmsh829310d4a331963p1ca8fdjsnd643b41e3b65",
+        "X-RapidAPI-Host": "mashape-community-urban-dictionary.p.rapidapi.com",
+    }
+    return requests.get(url, headers=headers, params=querystring).json()
 
 
 @app.get("/working")

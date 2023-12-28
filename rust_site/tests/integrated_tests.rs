@@ -3,7 +3,17 @@ use actix_web::{http::StatusCode, test, web, App};
 use rust_site::*;
 
 #[actix_web::test]
-async fn test_init_service() {
+async fn test_api_service() {
+    let app = test::init_service(App::new().service(api)).await;
+
+    let req = test::TestRequest::with_uri("/api").to_request();
+
+    let res = app.call(req).await.unwrap();
+    assert_eq!(res.status(), StatusCode::OK);
+}
+
+#[actix_web::test]
+async fn test_working_service() {
     let app = test::init_service(
         App::new()
             .app_data(web::Data::new(create_test_gauge_metric()))

@@ -5,6 +5,11 @@ from .main import app
 client = TestClient(app)
 
 
+def test_api():
+    response = client.get("/api")
+    assert response.status_code == 200
+
+
 def test_working():
     response = client.get("/working")
     assert response.status_code == 200

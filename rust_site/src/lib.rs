@@ -1,5 +1,5 @@
 use actix_files::NamedFile;
-use actix_web::{get, web, Responder, Result};
+use actix_web::{get, web, HttpResponse, Responder, Result};
 use actix_web_prom::PrometheusMetrics;
 use actix_web_prom::PrometheusMetricsBuilder;
 use prometheus::{
@@ -8,6 +8,42 @@ use prometheus::{
 };
 use rand::Rng;
 use serde::Serialize;
+
+#[get("/api")]
+async fn api() -> Result<HttpResponse> {
+    let url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define";
+
+    let mut headers = reqwest::header::HeaderMap::new();
+    headers.insert(
+        "X-RapidAPI-Key",
+        "e15cce8cedmsh829310d4a331963p1ca8fdjsnd643b41e3b65"
+            .parse()
+            .unwrap(),
+    );
+    headers.insert(
+        "X-RapidAPI-Host",
+        "mashape-community-urban-dictionary.p.rapidapi.com"
+            .parse()
+            .unwrap(),
+    );
+    let query_params = [("term", "wat")];
+
+    let response = reqwest::Client::new()
+        .get(url)
+        .headers(headers)
+        .query(&query_params)
+        .send()
+        .await
+        .unwrap();
+
+    if response.status().is_success() {
+        let body: String = response.text().await.unwrap();
+        // println!("{}", body);
+        Ok(HttpResponse::Ok().body(body))
+    } else {
+        Ok(HttpResponse::InternalServerError().finish())
+    }
+}
 
 #[derive(Serialize)]
 struct Status {
