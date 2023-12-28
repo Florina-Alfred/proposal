@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"io"
 	"math/rand"
 	"net/http"
 	"time"
@@ -13,6 +15,31 @@ type status struct {
 	Working  string `json:"working"`
 	Language string `json:"language"`
 	Time     string `json:"time"`
+}
+
+func api(c *gin.Context) {
+	url := "https://mashape-community-urban-dictionary.p.rapidapi.com/define?term=soydev"
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return
+	}
+
+	req.Header.Add("X-RapidAPI-Key", "e15cce8cedmsh829310d4a331963p1ca8fdjsnd643b41e3b65")
+	req.Header.Add("X-RapidAPI-Host", "mashape-community-urban-dictionary.p.rapidapi.com")
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": json.RawMessage(body)})
+
 }
 
 func working(c *gin.Context) {
@@ -29,13 +56,14 @@ func setupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	// router := gin.Default()
 	router := gin.New()
-	// gin.DefaultWriter = io.Discard
 	router.LoadHTMLGlob("templates/*")
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
 	router.GET("/working", working)
+	router.GET("/api", api)
+
 	metrics := ginmetrics.GetMonitor()
 	metrics.SetMetricPath("/metrics")
 	metrics.SetSlowTime(10)

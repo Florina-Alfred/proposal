@@ -11,6 +11,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestApi(t *testing.T) {
+	router := setupRouter()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+}
+
 func TestWorking(t *testing.T) {
 	router := setupRouter()
 	var mockResponse = status{Working: "ok", Language: "golang", Time: time.Now().Format(time.UnixDate)}
