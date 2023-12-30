@@ -1,4 +1,4 @@
-name: Package to ghcr.io
+name: Python package to ghcr.io
 on:
   # push:
   #   branches:
