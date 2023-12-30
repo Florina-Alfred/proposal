@@ -21,6 +21,6 @@
 {
   "working": "ok",
   "language": "python",
-  "time": "xxxxxxxxxxxxx"
+  "time": "xxx xxx xx xx"
 }
 ```

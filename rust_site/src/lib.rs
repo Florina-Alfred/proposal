@@ -2,12 +2,15 @@ use actix_files::NamedFile;
 use actix_web::{get, web, HttpResponse, Responder, Result};
 use actix_web_prom::PrometheusMetrics;
 use actix_web_prom::PrometheusMetricsBuilder;
+use chrono::prelude::DateTime;
+use chrono::Utc;
 use prometheus::{
     core::{AtomicF64, GenericGauge},
     Gauge,
 };
 use rand::Rng;
 use serde::Serialize;
+use std::time::SystemTime;
 
 #[get("/api")]
 async fn api() -> Result<HttpResponse> {
@@ -48,12 +51,17 @@ async fn api() -> Result<HttpResponse> {
 #[derive(Serialize)]
 struct Status {
     working: String,
+    language: String,
+    time: String,
 }
 
 #[get("/working")]
 async fn working(test_gauge: web::Data<Gauge>) -> Result<impl Responder> {
+    let time: DateTime<Utc> = SystemTime::now().clone().into();
     let obj = Status {
         working: "ok".to_string(),
+        language: "rust".to_string(),
+        time: time.format("%d-%b-%Y %H:%M:%S %P").to_string(),
     };
     test_gauge.set(rand::thread_rng().gen::<f64>());
     return Ok(web::Json(obj));
