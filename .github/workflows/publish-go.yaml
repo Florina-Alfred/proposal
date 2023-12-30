@@ -5,6 +5,10 @@ on:
   #     - main
   pull_request:
     types: ["closed"]
+  workflow_dispatch:
+    discord:
+      types:
+        - 'message.created'
 jobs:
   go-package-docker-image:
     permissions:
