@@ -3,6 +3,7 @@ use rust_site::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("Serving at http://localhost:3000");
     HttpServer::new(move || {
         App::new()
             .route("/", web::get().to(index))
