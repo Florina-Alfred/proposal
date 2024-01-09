@@ -28,16 +28,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.TOKEN }}
   python-package-docker-image:
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      matrix:
-        os: ["ubuntu-latest"]
-        # os: ["ubuntu-latest", "windows-latest","macOS-latest"]
-        python-version: ["3.12"]
-        # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-    runs-on: ${{ matrix.os }}
     steps:
     - name: Set outputs
       id: vars
