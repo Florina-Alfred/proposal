@@ -83,9 +83,6 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-
 	router := setupRouter()
-
 	router.Run(":3000")
-
 }
